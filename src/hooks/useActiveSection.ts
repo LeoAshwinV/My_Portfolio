@@ -4,21 +4,27 @@ export function useActiveSection(ids: string[]) {
   const [active, setActive] = useState('');
 
   useEffect(() => {
-    const observers: IntersectionObserver[] = [];
+    const onScroll = () => {
+      const viewH   = window.innerHeight;
+      // Trigger line = 38% down the viewport (below navbar, above midscreen)
+      const trigger = window.scrollY + viewH * 0.38;
 
-    ids.forEach(id => {
-      const el = document.getElementById(id);
-      if (!el) return;
-      const obs = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting) setActive(id); },
-        { threshold: 0.25, rootMargin: '-10% 0px -55% 0px' }
-      );
-      obs.observe(el);
-      observers.push(obs);
-    });
+      let current = '';
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        // Use offsetTop so it works even before layout paint
+        if (el.offsetTop <= trigger) current = id;
+      }
+      setActive(current);
+    };
 
-    return () => observers.forEach(o => o.disconnect());
-  }, [ids]);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll(); // run once on mount so the initial section is highlighted
+    return () => window.removeEventListener('scroll', onScroll);
+  // ids is a stable array reference from Navbar — no need to re-run on its changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return active;
 }

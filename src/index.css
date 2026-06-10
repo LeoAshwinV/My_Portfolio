@@ -33,6 +33,10 @@
 }
 
 @layer utilities {
+  /* Hide scrollbar (cross-browser) */
+  .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+
   /* White-to-grey gradient headings */
   .heading {
     background: linear-gradient(160deg, #FFFFFF 0%, #C0C0C0 100%);

@@ -171,20 +171,47 @@ export default function Hero() {
           Available for full-time roles
         </motion.div>
 
-        {/* Name — pure clip-reveal entrance + foreground parallax layer.
-              No opacity: the overflow:hidden wrapper clips the text at its
-              own height boundary, so it rises into view like a curtain. */}
-        <div style={{ overflow: 'hidden', display: 'block', marginBottom: '1.5rem' }}>
-          <motion.h1
-            initial={{ y: '100%' }}
-            animate={{ y: '0%'   }}
-            transition={{ duration: 0.92, ease: CINEMATIC, delay: 0.28 }}
-            className="font-black leading-none heading font-mono"
-            style={{ fontSize: 'clamp(52px, 9vw, 96px)', letterSpacing: '-0.04em', y: nameExtraY }}
-          >
-            {reduced ? 'Leo Ashwin V' : scrambledName}
-          </motion.h1>
-        </div>
+        {/* Name — per-word cinematic mask curtain.
+              Each word has its own overflow:hidden clip zone so it rises
+              independently: blur clears and the letter lifts into place.
+              Words stagger 110ms apart → "Leo … Ashwin … V" cascade.        */}
+        <motion.h1
+          className="font-black leading-none font-mono"
+          style={{
+            fontSize: 'clamp(52px, 9vw, 96px)',
+            letterSpacing: '-0.04em',
+            display: 'flex',
+            flexWrap: 'wrap',
+            columnGap: '0.28em',
+            rowGap: 0,
+            marginBottom: '1.5rem',
+            y: nameExtraY,
+          }}
+          aria-label="Leo Ashwin V"
+        >
+          {['Leo', 'Ashwin', 'V'].map((word, i) => (
+            <span
+              key={word}
+              style={{
+                display: 'block',
+                overflow: 'hidden',
+                /* tiny bottom padding prevents descenders being clipped */
+                paddingBottom: '0.06em',
+                lineHeight: 1.05,
+              }}
+            >
+              <motion.span
+                initial={{ y: '105%', filter: 'blur(12px)', opacity: 0.6 }}
+                animate={{ y: '0%',   filter: 'blur(0px)',  opacity: 1   }}
+                transition={{ duration: 1.0, ease: CINEMATIC, delay: 0.28 + i * 0.11 }}
+                className="heading"
+                style={{ display: 'block' }}
+              >
+                {(reduced ? 'Leo Ashwin V' : scrambledName).split(' ')[i] ?? word}
+              </motion.span>
+            </span>
+          ))}
+        </motion.h1>
 
         {/* Typewriter role */}
         <motion.div variants={heroItem} className="flex flex-col gap-2.5 mb-7">

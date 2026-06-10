@@ -1,0 +1,12 @@
+{
+  "name": "Leo Ashwin V — Portfolio",
+  "short_name": "Leo Ashwin V",
+  "description": "Full-Stack Engineer portfolio — React, Java/Spring Boot, Computer Vision",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0E0E0E",
+  "theme_color": "#4F8EF7",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

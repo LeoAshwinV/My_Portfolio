@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Lenis from 'lenis';
 import { MotionConfig } from 'framer-motion';
 import Cursor from './components/Cursor';
@@ -8,14 +8,22 @@ import CommandPalette from './components/CommandPalette';
 import Toast from './components/Toast';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
+import About from './components/About';
 import Skills from './components/Skills';
 import Experience from './components/Experience';
 import Projects from './components/Projects';
 import Education from './components/Education';
+import Contact from './components/Contact';
 import Footer from './components/Footer';
+import IntroLoader from './components/IntroLoader';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
+  const [introComplete, setIntroComplete] = useState(false);
+
   useEffect(() => {
+    if (!introComplete) return;
+
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -26,14 +34,17 @@ function App() {
     const raf = (time: number) => { lenis.raf(time); rafId = requestAnimationFrame(raf); };
     rafId = requestAnimationFrame(raf);
     return () => { cancelAnimationFrame(rafId); lenis.destroy(); };
-  }, []);
+  }, [introComplete]);
 
   return (
     /* reducedMotion="user" — Framer Motion reads the OS preference and disables
        all spring / tween animations automatically for users who request it.      */
     <MotionConfig reducedMotion="user">
+      {!introComplete && <IntroLoader onDone={() => setIntroComplete(true)} />}
+
       <ScrollProgress />
       <Cursor />
+      <ScrollToTop />
       <DevConsole />
       <CommandPalette />
       <Toast />
@@ -53,10 +64,12 @@ function App() {
         <Navbar />
         <main>
           <Hero />
+          <About />
           <Skills />
           <Experience />
           <Projects />
           <Education />
+          <Contact />
         </main>
         <Footer />
       </div>

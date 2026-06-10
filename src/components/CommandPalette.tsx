@@ -209,8 +209,8 @@ export default function CommandPalette() {
               ref={listRef}
               id="cp-list"
               role="listbox"
-              className="overflow-y-auto py-2"
-              style={{ maxHeight: '380px', scrollbarWidth: 'none' }}
+              className="overflow-y-auto py-2 no-scrollbar"
+              style={{ maxHeight: '380px' }}
             >
               {filtered.length === 0 ? (
                 <p className="py-12 text-center text-sm" style={{ color: '#666' }}>

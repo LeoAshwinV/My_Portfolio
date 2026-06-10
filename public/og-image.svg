@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="glow-blue" cx="25%" cy="35%" r="55%">
+      <stop offset="0%" stop-color="rgba(79,130,247,0.3)"/>
+      <stop offset="100%" stop-color="rgba(79,130,247,0)"/>
+    </radialGradient>
+    <radialGradient id="glow-purple" cx="80%" cy="70%" r="50%">
+      <stop offset="0%" stop-color="rgba(139,92,246,0.25)"/>
+      <stop offset="100%" stop-color="rgba(139,92,246,0)"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#0E0E0E"/>
+
+  <!-- Glow blobs -->
+  <rect width="1200" height="630" fill="url(#glow-blue)"/>
+  <rect width="1200" height="630" fill="url(#glow-purple)"/>
+
+  <!-- Subtle grid lines bottom-right -->
+  <line x1="700" y1="520" x2="1160" y2="520" stroke="rgba(79,130,247,0.08)" stroke-width="1"/>
+  <line x1="700" y1="555" x2="1160" y2="555" stroke="rgba(79,130,247,0.06)" stroke-width="1"/>
+  <line x1="700" y1="590" x2="1160" y2="590" stroke="rgba(79,130,247,0.04)" stroke-width="1"/>
+
+  <!-- Name -->
+  <text
+    x="600"
+    y="265"
+    text-anchor="middle"
+    font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif"
+    font-size="72"
+    font-weight="900"
+    fill="#ffffff"
+    letter-spacing="-1.5"
+  >LEO ASHWIN V</text>
+
+  <!-- Title -->
+  <text
+    x="600"
+    y="330"
+    text-anchor="middle"
+    font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif"
+    font-size="32"
+    font-weight="600"
+    fill="#4F82F7"
+    letter-spacing="0.5"
+  >Full-Stack Engineer</text>
+
+  <!-- Stack -->
+  <text
+    x="600"
+    y="385"
+    text-anchor="middle"
+    font-family="Inter, -apple-system, BlinkMacSystemFont, sans-serif"
+    font-size="24"
+    font-weight="400"
+    fill="#666666"
+    letter-spacing="0.3"
+  >React · Java/Spring Boot · Computer Vision</text>
+</svg>

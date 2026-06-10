@@ -5,10 +5,12 @@ import { EASE } from '../lib/motion';
 import { openPalette } from './CommandPalette';
 
 const links = [
+  { label: 'About',      href: '#about',      id: 'about'      },
   { label: 'Skills',     href: '#skills',     id: 'skills'     },
   { label: 'Experience', href: '#experience', id: 'experience' },
   { label: 'Projects',   href: '#projects',   id: 'projects'   },
   { label: 'Education',  href: '#education',  id: 'education'  },
+  { label: 'Contact',    href: '#contact',    id: 'contact'    },
 ];
 
 export default function Navbar() {
