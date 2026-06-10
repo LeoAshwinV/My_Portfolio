@@ -50,20 +50,45 @@ export default function Footer() {
             className="text-sm mb-8 max-w-sm mx-auto" style={{ color: '#999' }}
           >Open to full-time full-stack roles and collaborative engineering opportunities.</motion.p>
 
-          <motion.a
-            href="mailto:leoashwin22@gmail.com"
-            onClick={copyEmail}
+          <motion.div
             variants={fadeUp} initial="hidden" whileInView="show" viewport={viewport}
-            whileHover={{ y: -2, scale: 1.03 }} whileTap={{ scale: 0.97 }}
-            transition={{ duration: 0.2, ease: EASE }}
-            className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-2xl text-sm font-bold text-white"
-            style={{ background: 'linear-gradient(135deg,#4F8EF7 0%,#6366F1 100%)', boxShadow: '0 0 0 1px rgba(79,142,247,0.35), 0 8px 32px rgba(79,142,247,0.18)' }}
+            className="flex flex-wrap items-center justify-center gap-3"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-            </svg>
-            leoashwin22@gmail.com
-          </motion.a>
+            <motion.a
+              href="mailto:leoashwin22@gmail.com"
+              onClick={copyEmail}
+              whileHover={{ y: -2, scale: 1.03 }} whileTap={{ scale: 0.97 }}
+              transition={{ duration: 0.2, ease: EASE }}
+              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-2xl text-sm font-bold text-white"
+              style={{ background: 'linear-gradient(135deg,#4F8EF7 0%,#6366F1 100%)', boxShadow: '0 0 0 1px rgba(79,142,247,0.35), 0 8px 32px rgba(79,142,247,0.18)' }}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+              </svg>
+              leoashwin22@gmail.com
+            </motion.a>
+
+            <motion.a
+              href="/Leo_Ashwin_V_Resume.docx"
+              download="Leo_Ashwin_V_Resume.docx"
+              whileHover={{ y: -2, scale: 1.03 }} whileTap={{ scale: 0.97 }}
+              transition={{ duration: 0.2, ease: EASE }}
+              className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-2xl text-sm font-bold"
+              style={{
+                color: '#A78BFA',
+                border: '1px solid rgba(167,139,250,0.3)',
+                background: 'rgba(167,139,250,0.07)',
+                boxShadow: '0 0 0 0px rgba(167,139,250,0)',
+              }}
+              onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(167,139,250,0.14)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(167,139,250,0.5)'; }}
+              onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = 'rgba(167,139,250,0.07)'; (e.currentTarget as HTMLElement).style.borderColor = 'rgba(167,139,250,0.3)'; }}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3M3 17v3a1 1 0 001 1h16a1 1 0 001-1v-3"/>
+              </svg>
+              Download Resume
+            </motion.a>
+          </motion.div>
         </motion.div>
 
         {/* Divider */}

@@ -137,6 +137,23 @@ export default function Navbar() {
             <span>⌘K</span>
           </button>
 
+          {/* Resume download */}
+          <a
+            href="/Leo_Ashwin_V_Resume.docx"
+            download="Leo_Ashwin_V_Resume.docx"
+            data-cursor
+            aria-label="Download Resume"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-mono font-semibold transition-all duration-200"
+            style={{ color: '#4F8EF7', border: '1px solid rgba(79,142,247,0.25)', background: 'rgba(79,142,247,0.06)' }}
+            onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background = 'rgba(79,142,247,0.14)'; el.style.borderColor = 'rgba(79,142,247,0.5)'; el.style.color = '#7EB3FF'; }}
+            onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background = 'rgba(79,142,247,0.06)'; el.style.borderColor = 'rgba(79,142,247,0.25)'; el.style.color = '#4F8EF7'; }}
+          >
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3M3 17v3a1 1 0 001 1h16a1 1 0 001-1v-3"/>
+            </svg>
+            Resume
+          </a>
+
           <div className="w-px h-5 rounded-full" style={{ background: 'rgba(255,255,255,0.08)' }} />
 
           <a
@@ -198,8 +215,20 @@ export default function Navbar() {
               >{l.label}</a>
             ))}
             <a
+              href="/Leo_Ashwin_V_Resume.docx"
+              download="Leo_Ashwin_V_Resume.docx"
+              className="mt-1 px-4 py-3 rounded-xl text-sm font-bold text-center flex items-center justify-center gap-2"
+              style={{ color: '#4F8EF7', border: '1px solid rgba(79,142,247,0.3)', background: 'rgba(79,142,247,0.08)' }}
+              onClick={() => setOpen(false)}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3M3 17v3a1 1 0 001 1h16a1 1 0 001-1v-3"/>
+              </svg>
+              Download Resume
+            </a>
+            <a
               href="mailto:leoashwin22@gmail.com"
-              className="mt-1 px-4 py-3 rounded-xl text-sm font-bold text-white text-center"
+              className="px-4 py-3 rounded-xl text-sm font-bold text-white text-center"
               style={{ background: 'linear-gradient(135deg,#4F8EF7,#8B5CF6)' }}
               onClick={() => setOpen(false)}
             >Hire Me</a>
