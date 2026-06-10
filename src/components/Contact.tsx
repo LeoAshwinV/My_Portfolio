@@ -1,6 +1,23 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import emailjs from '@emailjs/browser';
 import { motion, AnimatePresence } from 'framer-motion';
 import { maskReveal, stagger, staggerItem, viewport, CINEMATIC } from '../lib/motion';
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   EmailJS credentials — fill these in after setting up your account:
+   1. Go to https://www.emailjs.com  →  sign up (free, 200 emails/month)
+   2. Add Service  →  connect Gmail  →  copy the Service ID
+   3. Add Template →  use the variables below  →  copy the Template ID
+   4. Account → API Keys → copy the Public Key
+   Template variables to use in EmailJS dashboard:
+     {{from_name}}   – sender's name
+     {{from_email}}  – sender's email
+     {{message}}     – message body
+     {{to_name}}     – "Leo"  (set as a static default in the template)
+────────────────────────────────────────────────────────────────────────────── */
+const EJ_SERVICE_ID  = 'YOUR_SERVICE_ID';   // e.g. 'service_abc123'
+const EJ_TEMPLATE_ID = 'YOUR_TEMPLATE_ID';  // e.g. 'template_xyz456'
+const EJ_PUBLIC_KEY  = 'YOUR_PUBLIC_KEY';   // e.g. 'AbCdEfGhIjKlMnOp'
 
 const fieldVariants = {
   hidden: { opacity: 0, y: 14 },
@@ -12,19 +29,41 @@ const fieldVariants = {
 };
 
 export default function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', message: '' });
-  const [sent, setSent] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
+  const [form, setForm]       = useState({ name: '', email: '', message: '' });
+  const [status, setStatus]   = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const [focused, setFocused] = useState<string | null>(null);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const subject = encodeURIComponent(`Portfolio Contact - ${form.name}`);
-    const body = encodeURIComponent(form.message);
-    window.open(
-      `mailto:leoashwin22@gmail.com?subject=${subject}&body=${body}`,
-      '_blank'
-    );
-    setSent(true);
+    if (status === 'sending') return;
+
+    // If credentials not configured yet → fall back to mailto so it still works
+    if (
+      EJ_SERVICE_ID  === 'YOUR_SERVICE_ID' ||
+      EJ_TEMPLATE_ID === 'YOUR_TEMPLATE_ID' ||
+      EJ_PUBLIC_KEY  === 'YOUR_PUBLIC_KEY'
+    ) {
+      const subject = encodeURIComponent(`Portfolio Contact - ${form.name}`);
+      const body    = encodeURIComponent(`From: ${form.name} <${form.email}>\n\n${form.message}`);
+      window.open(`mailto:leoashwin22@gmail.com?subject=${subject}&body=${body}`, '_blank');
+      setStatus('sent');
+      return;
+    }
+
+    setStatus('sending');
+    try {
+      await emailjs.sendForm(
+        EJ_SERVICE_ID,
+        EJ_TEMPLATE_ID,
+        formRef.current!,
+        { publicKey: EJ_PUBLIC_KEY }
+      );
+      setStatus('sent');
+    } catch (err) {
+      console.error('EmailJS error:', err);
+      setStatus('error');
+    }
   }
 
   const inputStyle = (field: string): React.CSSProperties => ({
@@ -305,8 +344,9 @@ export default function Contact() {
           {/* RIGHT — form */}
           <div>
             <AnimatePresence mode="wait">
-              {!sent ? (
+              {status !== 'sent' ? (
                 <motion.form
+                  ref={formRef}
                   key="form"
                   onSubmit={handleSubmit}
                   initial={{ opacity: 0, y: 20 }}
@@ -342,6 +382,7 @@ export default function Contact() {
                     }}>Name</label>
                     <input
                       type="text"
+                      name="from_name"
                       required
                       placeholder="Your name"
                       value={form.name}
@@ -371,6 +412,7 @@ export default function Contact() {
                     }}>Email</label>
                     <input
                       type="email"
+                      name="from_email"
                       required
                       placeholder="your@email.com"
                       value={form.email}
@@ -399,6 +441,7 @@ export default function Contact() {
                       marginBottom: '8px',
                     }}>Message</label>
                     <textarea
+                      name="message"
                       required
                       rows={4}
                       placeholder="Tell me about your project or opportunity..."
@@ -425,32 +468,69 @@ export default function Contact() {
                   >
                     <motion.button
                       type="submit"
-                      whileHover={{ y: -2, scale: 1.01 }}
-                      whileTap={{ scale: 0.98 }}
+                      disabled={status === 'sending'}
+                      whileHover={status !== 'sending' ? { y: -2, scale: 1.01 } : {}}
+                      whileTap={status !== 'sending' ? { scale: 0.98 } : {}}
                       style={{
                         width: '100%',
                         padding: '14px 24px',
-                        background: 'linear-gradient(135deg, #4F8EF7, #8B5CF6)',
+                        background: status === 'error'
+                          ? 'linear-gradient(135deg, #EF4444, #DC2626)'
+                          : 'linear-gradient(135deg, #4F8EF7, #8B5CF6)',
                         border: 'none',
                         borderRadius: '12px',
                         color: '#fff',
                         fontSize: '15px',
                         fontWeight: 700,
                         fontFamily: 'Inter, sans-serif',
-                        cursor: 'pointer',
+                        cursor: status === 'sending' ? 'not-allowed' : 'pointer',
+                        opacity: status === 'sending' ? 0.75 : 1,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
                         gap: '10px',
                         boxShadow: '0 4px 24px rgba(79,142,247,0.3)',
+                        transition: 'background 0.3s, opacity 0.2s',
                       }}
                     >
-                      <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                          d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-                      </svg>
-                      Send Message
+                      {status === 'sending' ? (
+                        /* Spinner */
+                        <>
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            style={{ animation: 'spin 0.8s linear infinite' }}>
+                            <path strokeLinecap="round" strokeWidth={2.5}
+                              d="M12 2a10 10 0 0 1 10 10" opacity="0.3"/>
+                            <path strokeLinecap="round" strokeWidth={2.5}
+                              d="M12 2a10 10 0 0 1 10 10"/>
+                          </svg>
+                          Sending…
+                        </>
+                      ) : status === 'error' ? (
+                        <>
+                          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                              d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+                          </svg>
+                          Failed — try again
+                        </>
+                      ) : (
+                        <>
+                          <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+                              d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                          </svg>
+                          Send Message
+                        </>
+                      )}
                     </motion.button>
+                    {status === 'error' && (
+                      <p style={{ color: '#F87171', fontSize: '12px', marginTop: '8px', textAlign: 'center' }}>
+                        Something went wrong. You can also reach me at{' '}
+                        <a href="mailto:leoashwin22@gmail.com" style={{ color: '#F87171', textDecoration: 'underline' }}>
+                          leoashwin22@gmail.com
+                        </a>
+                      </p>
+                    )}
                   </motion.div>
                 </motion.form>
               ) : (
@@ -500,6 +580,10 @@ export default function Contact() {
       </div>
 
       <style>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(360deg); }
+        }
         @keyframes pulse-green {
           0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.6); }
           70% { box-shadow: 0 0 0 8px rgba(34,197,94,0); }
